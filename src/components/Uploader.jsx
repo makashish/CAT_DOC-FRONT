@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { uploadFile } from "../services/api";
 
 const Uploader = ({ setDocUrl, setIsLoading }) => {
   const [file, setFile] = useState(null);
+  const [fileName, setFileName] = useState(""); // NEW: For showing selected file name
   const [lang, setLang] = useState("eng");
   const [loadingText, setLoadingText] = useState("");
 
+  const fileInputRef = useRef(null);
+  const cameraInputRef = useRef(null);
+
   const handleUpload = async () => {
     if (!file) return alert("Please select a file.");
-
     setIsLoading(true);
     setLoadingText("Converting...");
 
@@ -29,14 +32,53 @@ const Uploader = ({ setDocUrl, setIsLoading }) => {
     }
   };
 
+  const handleFileChange = (e) => {
+    const selected = e.target.files[0];
+    setFile(selected);
+    setFileName(selected?.name || "");
+  };
+
   return (
     <div className="button-section">
-      <input type="file" onChange={(e) => setFile(e.target.files[0])} className="file-input"/>
-      
+      {/* Hidden Inputs */}
+      <input
+        type="file"
+        accept="image/*,application/pdf"
+        ref={fileInputRef}
+        style={{ display: "none" }}
+        onChange={handleFileChange}
+      />
+      <input
+        type="file"
+        accept="image/*"
+        capture="environment"
+        ref={cameraInputRef}
+        style={{ display: "none" }}
+        onChange={handleFileChange}
+      />
+
+      {/* Buttons for options */}
+      <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
+        <button onClick={() => fileInputRef.current.click()}>
+          📁 Choose from Device
+        </button>
+        <button onClick={() => cameraInputRef.current.click()}>
+          📷 Upload by Camera
+        </button>
+      </div>
+
+      {/* File Name Display */}
+      {fileName && (
+        <p style={{ fontStyle: "italic", marginBottom: "10px" }}>
+          Selected File: <strong>{fileName}</strong>
+        </p>
+      )}
+
+      {/* Language Select */}
       <select
         value={lang}
         onChange={(e) => setLang(e.target.value)}
-        className="border p-1 "
+        className="border p-1"
       >
       <option value="afr">Afrikaans</option>
 <option value="amh">Amharic</option>
