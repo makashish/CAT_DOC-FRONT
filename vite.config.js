@@ -8,4 +8,7 @@ export default defineConfig({
       '/api': 'http://localhost:5000', // proxy to Flask backend
     },
   },
+  build: {
+    outDir: 'dist', // ensures Render knows where to find output
+  },
 });
