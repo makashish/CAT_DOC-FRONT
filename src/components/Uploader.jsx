@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
 import { uploadFile } from "../services/api";
 
-const Uploader = ({ setDocUrl, setIsLoading }) => {
+const Uploader = ({ setDocUrl, setIsLoading, backendURL }) => {
+  console.log("Backend URL from config.json:", backendURL);
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState(""); // NEW: For showing selected file name
   const [lang, setLang] = useState("eng");
@@ -16,7 +17,7 @@ const Uploader = ({ setDocUrl, setIsLoading }) => {
     setLoadingText("Converting...");
 
     try {
-      const result = await uploadFile(file, lang);
+      const result = await uploadFile(file, lang, backendURL);
       console.log("Backend Result:", result);
       if (result?.docx_url) {
         setDocUrl(result.docx_url);

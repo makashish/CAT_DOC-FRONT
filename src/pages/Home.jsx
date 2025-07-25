@@ -3,20 +3,24 @@ import Uploader from "../components/Uploader";
 import Header from "../components/Header";
 
 
-const Home = () => {
+const Home = ({ backendURL }) => {
   const [docUrl, setDocUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   return (
     
     <div ><Header/>
-      <Uploader setDocUrl={setDocUrl} setIsLoading={setIsLoading} />
+      <Uploader
+  setDocUrl={setDocUrl}
+  setIsLoading={setIsLoading}
+  backendURL={backendURL}
+/>
       {isLoading && <p></p>}
       {docUrl && (
         <div >
   <p className="doc-text">DOCUMENT READY:</p>
   <a
-    href={`http://localhost:5000${docUrl}`}
+    href={docUrl}
     download
     target="_blank"
     rel="noopener noreferrer"
